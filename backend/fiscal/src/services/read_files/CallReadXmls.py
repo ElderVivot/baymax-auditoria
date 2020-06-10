@@ -2,14 +2,14 @@ import sys
 import os
 
 absPath = os.path.dirname(os.path.abspath(__file__))
-fileDir = absPath[:absPath.find('src')]
-sys.path.append(os.path.join(fileDir, 'src'))
+fileDir = absPath[:absPath.find('backend')]
+sys.path.append(os.path.join(fileDir, 'backend'))
 
 import datetime
 from tools.leArquivos import readXml, readJson
 import tools.funcoesUteis as funcoesUteis
-from services.read_files.NFe import NFe
-from services.read_files.NFeCanceled import NFeCanceled
+from fiscal.src.services.read_files.NFe import NFe
+from fiscal.src.services.read_files.NFeCanceled import NFeCanceled
 
 
 class CallReadXmls(object):
@@ -21,7 +21,6 @@ class CallReadXmls(object):
 
         isNFe = funcoesUteis.returnDataFieldInDict(dataXml, ['nfeProc', 'NFe', 'infNFe', '@Id'])
         isNFeCanceled = funcoesUteis.returnDataFieldInDict(dataXml, ['procEventoNFe', 'evento', 'infEvento', 'chNFe'])
-        print(isNFe, isNFeCanceled)
         
         nf = None
 

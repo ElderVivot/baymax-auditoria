@@ -2,8 +2,8 @@ import sys
 import os
 
 absPath = os.path.dirname(os.path.abspath(__file__))
-fileDir = absPath[:absPath.find('src')]
-sys.path.append(os.path.join(fileDir, 'src'))
+fileDir = absPath[:absPath.find('backend')]
+sys.path.append(os.path.join(fileDir, 'backend'))
 
 import datetime
 from tools.leArquivos import readXml, readJson
