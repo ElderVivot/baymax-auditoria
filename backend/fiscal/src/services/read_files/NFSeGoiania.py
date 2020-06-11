@@ -13,75 +13,40 @@ import tools.funcoesUteis as funcoesUteis
 class NFSeGoiania(object):
     def __init__(self, dataXml):
         self._dataXml = dataXml
+        self._nfs = []
 
     def readNFe(self):
-        nfs = funcoesUteis.returnDataFieldInDict(self._dataXml, ['geral'])
-        print(nfs)
+        nfsXml = funcoesUteis.returnDataFieldInDict(self._dataXml, ['geral', 'GerarNfseResposta'])
 
-        for nf in nfs:
-            print(nf)
+        for nf in nfsXml:
+            objNF = {}
 
-            keyNF = funcoesUteis.returnDataFieldInDict(nf, ['GerarNfseResposta', 'ListaNfse', 'CompNfse', 'Nfse', 'InfNfse', 'CodigoVerificacao'])
+            objNF['keyNF'] = funcoesUteis.returnDataFieldInDict(nf, ['ListaNfse', 'CompNfse', 'Nfse', 'InfNfse', 'CodigoVerificacao'])
             
-            numberNF = funcoesUteis.returnDataFieldInDict(nf, ['GerarNfseResposta', 'ListaNfse', 'CompNfse', 'Nfse', 'InfNfse', 'Numero'])
+            objNF['numberNF'] = funcoesUteis.returnDataFieldInDict(nf, ['ListaNfse', 'CompNfse', 'Nfse', 'InfNfse', 'Numero'])
 
-            print(keyNF, numberNF)
+            objNF['issueDateNF'] = funcoesUteis.returnDataFieldInDict(nf, ['ListaNfse', 'CompNfse', 'Nfse', 'InfNfse', 'DataEmissao'])
+            objNF['issueDateNF'] = funcoesUteis.retornaCampoComoData(objNF['issueDateNF'], 2)
+
+            objNF['valueNF'] = funcoesUteis.returnDataFieldInDict(nf, ['ListaNfse', 'CompNfse', 'Nfse', 'InfNfse', 'DeclaracaoPrestacaoServico', 'InfDeclaracaoPrestacaoServico', 'Servico', 'Valores', 'ValorServicos'])
             
-            # issueDateNF = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'ide', 'dhEmi'])
-            # issueDateNF2 = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'ide', 'dEmi'])
-            # issueDateNF = issueDateNF2 if ( issueDateNF == "" or issueDateNF is None ) else issueDateNF
-            # issueDateNF = funcoesUteis.transformDateFieldToString(funcoesUteis.retornaCampoComoData(issueDateNF, 2))
-
-            # modelNF = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'ide', 'mod'])
-            # serieNF = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'ide', 'serie'])
-            # valueNF = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'total', 'ICMSTot', 'vNF'])
-            # valueICMS = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'total', 'ICMSTot', 'vICMS'])
-            # nameIssuer = funcoesUteis.justLettersNumbersDots(funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'emit', 'xNome']))
-            # nameReceiver = funcoesUteis.justLettersNumbersDots(funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'dest', 'xNome']))
-
-            # typeNF = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'ide', 'tpNF'])
+            objNF['cnpjIssuer'] = funcoesUteis.returnDataFieldInDict(nf, ['ListaNfse', 'CompNfse', 'Nfse', 'InfNfse', 'DeclaracaoPrestacaoServico', 'InfDeclaracaoPrestacaoServico', 'Prestador', 'CpfCnpj', 'Cnpj'])
+            objNF['cpfIssuer'] = funcoesUteis.returnDataFieldInDict(nf, ['ListaNfse', 'CompNfse', 'Nfse', 'InfNfse', 'DeclaracaoPrestacaoServico', 'InfDeclaracaoPrestacaoServico', 'Prestador', 'CpfCnpj', 'Cpf'])
+            objNF['cgceIssuer'] = objNF['cpfIssuer'] if objNF['cnpjIssuer'] == "" else objNF['cnpjIssuer']
             
-            # cnpjIssuer = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'emit', 'CNPJ'])
-            # cpfIssuer = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'emit', 'CPF'])
-            # cnpjIssuer = cpfIssuer if cnpjIssuer == "" else cnpjIssuer
-            
-            # cnpjReceiver = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'dest', 'CNPJ'])
-            # cpfReceiver = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'dest', 'CPF'])
-            # cnpjReceiver = cpfReceiver if cnpjReceiver == "" else cnpjReceiver
+            objNF['cnpjReceiver'] = funcoesUteis.returnDataFieldInDict(nf, ['ListaNfse', 'CompNfse', 'Nfse', 'InfNfse', 'DeclaracaoPrestacaoServico', 'InfDeclaracaoPrestacaoServico', 'Tomador', 'IdentificacaoTomador', 'CpfCnpj', 'Cnpj'])
+            objNF['cpfReceiver'] = funcoesUteis.returnDataFieldInDict(nf, ['ListaNfse', 'CompNfse', 'Nfse', 'InfNfse', 'DeclaracaoPrestacaoServico', 'InfDeclaracaoPrestacaoServico', 'Tomador', 'IdentificacaoTomador', 'CpfCnpj', 'Cpf'])
+            objNF['cgceReceiver'] = objNF['cpfReceiver'] if objNF['cnpjReceiver'] == "" else objNF['cnpjReceiver']
 
-            # if typeNF == "0": # quem emitiu foi quem comprou a nota, então o dest vira o emit (nota própria)
-            #     cnpjIssuerCorrect = cnpjReceiver
-            #     nameIssuerCorrect = nameReceiver
-            #     cnpjReceiverCorrect = cnpjIssuer
-            #     nameReceiverCorrect = nameIssuer
-            # else:
-            #     cnpjIssuerCorrect = cnpjIssuer
-            #     nameIssuerCorrect = nameIssuer
-            #     cnpjReceiverCorrect = cnpjReceiver
-            #     nameReceiverCorrect = nameReceiver
+            objNF['statusNF'] = funcoesUteis.returnDataFieldInDict(nf, ['ListaMensagemRetorno', 'MensagemRetorno', 'Mensagem'])
 
-            # produtos = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'det'])
+            self._nfs.append(objNF)
 
-            # return {
-            #     "numberNF": numberNF,
-            #     "serieNF": serieNF,
-            #     "modelNF": modelNF,
-            #     "typeNF": typeNF,
-            #     "issueDateNF": issueDateNF,
-            #     "valueNF": valueNF,
-            #     "valueICMS": valueICMS,
-            #     "nameIssuer": nameIssuerCorrect,
-            #     "cnpjIssuer": cnpjIssuerCorrect,
-            #     "nameReceiver": nameReceiverCorrect,
-            #     "cnpjReceiver": cnpjReceiverCorrect,
-            #     "keyNF": keyNF,
-            #     "statusNF": 0, # ativa
-            #     "produtos": produtos
-            # }
+        return self._nfs
 
 
 if __name__ == "__main__":
-    dataXml = readXml("C:/_temp/notas_teste_gyn/04605182000185.xml")
+    dataXml = readXml("C:/_temp/notas_gyn_teste/04605182000185.xml")
 
     nf = NFSeGoiania(dataXml)
-    nf.readNFe()
+    print(nf.readNFe())

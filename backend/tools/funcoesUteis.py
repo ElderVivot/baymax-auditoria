@@ -86,6 +86,14 @@ def returnDataFieldInDict(data, valuesList, valueDefault=''):
             return data[valuesList[0]][valuesList[1]][valuesList[2]][valuesList[3]][valuesList[4]]
         elif lenList == 6:
             return data[valuesList[0]][valuesList[1]][valuesList[2]][valuesList[3]][valuesList[4]][valuesList[5]]
+        elif lenList == 7:
+            return data[valuesList[0]][valuesList[1]][valuesList[2]][valuesList[3]][valuesList[4]][valuesList[5]][valuesList[6]]
+        elif lenList == 8:
+            return data[valuesList[0]][valuesList[1]][valuesList[2]][valuesList[3]][valuesList[4]][valuesList[5]][valuesList[6]][valuesList[7]]
+        elif lenList == 9:
+            return data[valuesList[0]][valuesList[1]][valuesList[2]][valuesList[3]][valuesList[4]][valuesList[5]][valuesList[6]][valuesList[7]][valuesList[8]]
+        elif lenList == 10:
+            return data[valuesList[0]][valuesList[1]][valuesList[2]][valuesList[3]][valuesList[4]][valuesList[5]][valuesList[6]][valuesList[7]][valuesList[8]][valuesList[9]]
         else:
             return ""
     except Exception:
