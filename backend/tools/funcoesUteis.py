@@ -6,6 +6,7 @@ import datetime
 import hashlib
 import json
 import shutil
+from json2xml import json2xml
 from validate_docbr import CNPJ, CPF
 
 absPath = os.path.dirname(os.path.abspath(__file__))
@@ -461,3 +462,10 @@ def validateCPF(value):
 def validateCNPJ(value):
     cnpj = CNPJ()
     return cnpj.validate(value)
+
+def transformJsonToXml(json):
+    try:
+        return json2xml.Json2xml(json).to_xml()
+    except Exception:
+        print(Exception)
+        return ""
