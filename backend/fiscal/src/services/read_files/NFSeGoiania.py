@@ -8,8 +8,8 @@ sys.path.append(os.path.join(fileDir, 'backend'))
 import datetime
 from tools.leArquivos import readXml, readJson
 import tools.funcoesUteis as funcoesUteis
-import xml.etree.ElementTree as ET
 import xmltodict as xmldict
+from collections import OrderedDict
 
 
 class NFSeGoiania(object):
@@ -18,13 +18,14 @@ class NFSeGoiania(object):
         self._nfs = []
 
     def readNFe(self):
-        nfsXml = funcoesUteis.returnDataFieldInDict(self._dataXml, ['geral', 'GerarNfseResposta'])
-        teste = {}
+        nfsXml = funcoesUteis.returnDataFieldInDict(self._dataXml, ['geral', 'GerarNfseResposta'])        
 
         for nf in nfsXml:
-            # print(xmldict.unparse(nf))
-            teste['GerarNfseResposta'] = nf
-            print(xmldict.unparse(nf))
+            nfsConvertToXml = OrderedDict()
+            
+            nfsConvertToXml['GerarNfseResposta'] = nf
+            nfsConvertToXml = xmldict.unparse(nfsConvertToXml)
+            
             objNF = {}
 
             objNF['keyNF'] = funcoesUteis.returnDataFieldInDict(nf, ['ListaNfse', 'CompNfse', 'Nfse', 'InfNfse', 'CodigoVerificacao'])
@@ -46,13 +47,15 @@ class NFSeGoiania(object):
 
             objNF['statusNF'] = funcoesUteis.returnDataFieldInDict(nf, ['ListaMensagemRetorno', 'MensagemRetorno', 'Mensagem'])
 
+            objNF['xml'] = nfsConvertToXml
+
             self._nfs.append(objNF)
 
         return self._nfs
 
 
 if __name__ == "__main__":
-    dataXml = readXml("C:/_temp/notas_gyn_teste/04605182000185.xml")
+    dataXml = readXml("C:/_temp/notas_gyn_teste/30500798000100.xml")
 
     # with open("C:/_temp/notas_gyn_teste/04605182000185.xml") as file:
     #     data = xmldict.parse(file.read())
