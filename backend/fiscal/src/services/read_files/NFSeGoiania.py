@@ -25,12 +25,14 @@ class NFSeGoiania(object):
             
             nfsConvertToXml['GerarNfseResposta'] = nf
             nfsConvertToXml = xmldict.unparse(nfsConvertToXml)
+            nfsConvertToXml = funcoesUteis.removerAcentosECaracteresEspeciais(nfsConvertToXml)
             
             objNF = {}
+             
+            objNF['numberNF'] = funcoesUteis.returnDataFieldInDict(nf, ['ListaNfse', 'CompNfse', 'Nfse', 'InfNfse', 'Numero'])
 
             objNF['keyNF'] = funcoesUteis.returnDataFieldInDict(nf, ['ListaNfse', 'CompNfse', 'Nfse', 'InfNfse', 'CodigoVerificacao'])
-            
-            objNF['numberNF'] = funcoesUteis.returnDataFieldInDict(nf, ['ListaNfse', 'CompNfse', 'Nfse', 'InfNfse', 'Numero'])
+            objNF['keyNF'] = f"{objNF['numberNF']}-{objNF['keyNF']}"
 
             objNF['issueDateNF'] = funcoesUteis.returnDataFieldInDict(nf, ['ListaNfse', 'CompNfse', 'Nfse', 'InfNfse', 'DataEmissao'])
             objNF['issueDateNF'] = funcoesUteis.retornaCampoComoData(objNF['issueDateNF'], 2)
@@ -47,6 +49,8 @@ class NFSeGoiania(object):
 
             objNF['statusNF'] = funcoesUteis.returnDataFieldInDict(nf, ['ListaMensagemRetorno', 'MensagemRetorno', 'Mensagem'])
 
+            objNF['modelNF'] = 'NFS-e'
+
             objNF['xml'] = nfsConvertToXml
 
             self._nfs.append(objNF)
@@ -55,7 +59,7 @@ class NFSeGoiania(object):
 
 
 if __name__ == "__main__":
-    dataXml = readXml("C:/_temp/notas_gyn_teste/30500798000100.xml")
+    dataXml = readXml("C:/_temp/notas_gyn_teste/04605182000185.xml")
 
     # with open("C:/_temp/notas_gyn_teste/04605182000185.xml") as file:
     #     data = xmldict.parse(file.read())
