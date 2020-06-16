@@ -6,7 +6,6 @@ import datetime
 import hashlib
 import json
 import shutil
-from json2xml import json2xml
 from validate_docbr import CNPJ, CPF
 
 absPath = os.path.dirname(os.path.abspath(__file__))
@@ -23,8 +22,8 @@ def removerAcentosECaracteresEspeciais(palavra):
     palavraTratada = u"".join([c for c in nfkd if not unicodedata.combining(c)])
 
     # Usa expressão regular para retornar a palavra apenas com valores corretos
-    return re.sub('[^a-zA-Z0-9.!+:>=)?$(/*,\-_ \\\]', '', palavraTratada)
-
+    return re.sub('[^a-zA-Z0-9.!+:><=)?$(/*,"\'\-_ \\\]', '', palavraTratada)
+    
 def trocaCaracteresTextoPraLetraX(palavra):
     # Unicode normalize transforma um caracter em seu equivalente em latin.
     nfkd = unicodedata.normalize('NFKD', palavra).encode('ASCII', 'ignore').decode('ASCII')
@@ -462,10 +461,3 @@ def validateCPF(value):
 def validateCNPJ(value):
     cnpj = CNPJ()
     return cnpj.validate(value)
-
-def transformJsonToXml(json):
-    try:
-        return json2xml.Json2xml(json).to_xml()
-    except Exception:
-        print(Exception)
-        return ""

@@ -9,62 +9,68 @@ import datetime
 import json
 import shutil
 from fiscal.src.services.read_files.CallReadXmls import CallReadXmls
+from fiscal.src.services.rearrange_folder_xml.SaveXML import SaveXML
+from api.Rest import ApiRest
 from tools.leArquivos import readXml, readJson
 import tools.funcoesUteis as funcoesUteis
 
-wayDefault = readJson(os.path.join(fileDir, 'backend/extract/src/WayToSaveFiles.json') )
-wayToSaveFile = wayDefault['wayDefaultToSaveFiles']
-
 class RearrangeWayToSaveXML(object):
     def __init__(self):
-        self._wayToRead = input('- Informe o caminho onde estão os XMLs que deseja organizar: ')
-        self._wayToSave = input('- Agora informe o caminho onde deseja salvar os XMLs organizados: ')
+        self._wayToRead = input('- Informe o caminho onde estão os XMLs que deseja organizar: ').replace('\\', '/').replace('"', '')
+        self._wayToSave = input('- Agora informe o caminho onde deseja salvar os XMLs organizados: ').replace('\\', '/').replace('"', '')
         self._filterDate = input('- A partir de qual data deseja organizar estes XMLs (dd/mm/aaaa): ')
+        # self._wayToRead = "C:\\notas_fiscais\\goiania\\2020-06-06_10-33-29_pm\\sucess\\73470384134".replace('\\', '/').replace('"', '')
+        # self._wayToSave = "C:\\notas_fiscais".replace('\\', '/').replace('"', '')
+        # self._filterDate = "01/01/2020"
         self._filterDate = funcoesUteis.retornaCampoComoData(self._filterDate)
-        self._companies = readJson(os.path.join(wayToSaveFile, 'empresas.json'))
+        self._apiRest = ApiRest('extract_companies')
+        self._companies = self._apiRest.get()
 
     def returnDataEmp(self, cgce):
         for companie in self._companies:
-            if companie["cgce_emp"] == cgce and companie["stat_emp"] == "A" and companie["dina_emp"] is None:
-                return companie["codi_emp"]
+            cgceCompanie = funcoesUteis.treatTextField(companie["cgce_emp"])
+            if cgceCompanie == "":
+                continue
 
-    def copyXmlToFolderCompanieAndCompetence(self, wayBase, codiEmp, issueDate, wayXml, typeNF, keyNF):
-        if codiEmp is None:
-            return None
+            if companie["cgce_emp"] == cgce:
+                return companie
 
-        wayToSaveXml = os.path.join(wayBase, f'{str(codiEmp)} -', f'{issueDate.year}-{issueDate.month:0>2}', typeNF)
-        if os.path.exists(wayToSaveXml) is False:
-            os.makedirs(wayToSaveXml)
-
-        shutil.copy(wayXml, os.path.join(wayToSaveXml, f'{keyNF}.xml'))
-        print(f'\t- É uma nota de {typeNF[:len(typeNF)]} da empresa {codiEmp}.')
+        return None
     
-    def process(self, xml):
-        callReadXmls = CallReadXmls(xml)
-        nf = callReadXmls.process()
+    def process(self, pathXml):
+        callReadXmls = CallReadXmls(pathXml)
+        nfs = callReadXmls.process()
 
-        if nf is not None:
+        saveXML = SaveXML(self._wayToSave)
 
-            cnpjIssuer = funcoesUteis.analyzeIfFieldIsValid(nf, 'cnpjIssuer')
-            cnpjReceiver = funcoesUteis.analyzeIfFieldIsValid(nf, 'cnpjReceiver')
-            issueDate = funcoesUteis.retornaCampoComoData(funcoesUteis.analyzeIfFieldIsValid(nf, 'issueDateNF'), 2)
-            keyNF = funcoesUteis.analyzeIfFieldIsValid(nf, 'keyNF')
+        if nfs is not None:
 
-            if issueDate < self._filterDate:
-                return ""
+            for nf in nfs:
+                # se tiver apenas uma nota retira o dado do xml pra poder em ver de fazer um write num xml fazer apenas um copy
+                if len(nfs) == 1:
+                    nf['xml'] = ''
 
-            codiEmpIssuer = self.returnDataEmp(cnpjIssuer)
-            codiEmpReceiver = self.returnDataEmp(cnpjReceiver)
-            
-            try:
-                self.copyXmlToFolderCompanieAndCompetence(self._wayToSave, codiEmpIssuer, issueDate, xml, 'Saidas', keyNF)
-            except Exception:
-                pass
+                cgceIssuer = funcoesUteis.analyzeIfFieldIsValid(nf, 'cgceIssuer')
+                cgceReceiver = funcoesUteis.analyzeIfFieldIsValid(nf, 'cgceReceiver')
+                issueDate = funcoesUteis.analyzeIfFieldIsValid(nf, 'issueDateNF', None)
 
-            try:
-                self.copyXmlToFolderCompanieAndCompetence(self._wayToSave, codiEmpReceiver, issueDate, xml, 'Entradas', keyNF)
-            except Exception:
-                pass
+                if issueDate < self._filterDate:
+                    continue
+
+                companieIssuer = self.returnDataEmp(cgceIssuer)
+                companieReceiver = self.returnDataEmp(cgceReceiver)
+
+                if companieIssuer is not None:
+                    nf['companie'] = companieIssuer
+                    nf['typeNF'] = 'Saidas'
+
+                    saveXML.save(nf, pathXml)
+
+                if companieReceiver is not None:
+                    nf['companie'] = companieReceiver
+                    nf['typeNF'] = 'Entradas'
+
+                    saveXML.save(nf, pathXml)
 
     def processAll(self):
         for root, dirs, files in os.walk(self._wayToRead):
