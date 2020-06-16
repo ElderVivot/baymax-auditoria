@@ -10,6 +10,7 @@ from tools.leArquivos import readXml, readJson
 import tools.funcoesUteis as funcoesUteis
 from fiscal.src.services.read_files.NFe import NFe
 from fiscal.src.services.read_files.NFeCanceled import NFeCanceled
+from fiscal.src.services.read_files.NFSeGoiania import NFSeGoiania
 
 
 class CallReadXmls(object):
@@ -21,7 +22,8 @@ class CallReadXmls(object):
 
         isNFe = funcoesUteis.returnDataFieldInDict(dataXml, ['nfeProc', 'NFe', 'infNFe', '@Id'])
         isNFeCanceled = funcoesUteis.returnDataFieldInDict(dataXml, ['procEventoNFe', 'evento', 'infEvento', 'chNFe'])
-        
+        isNFSeGoiania = funcoesUteis.returnDataFieldInDict(dataXml, ['geral', 'GerarNfseResposta'])
+
         nf = None
 
         if isNFe != "":
@@ -32,10 +34,14 @@ class CallReadXmls(object):
             nfeCanceled = NFeCanceled(dataXml)
             nf = nfeCanceled.readNFeCanceled()
 
+        if isNFSeGoiania != "":
+            nfseGoiania = NFSeGoiania(dataXml)
+            nf = nfseGoiania.readNFe()
+
         return nf
 
 
-if __name__ == "__main__":
-    callReadXmls = CallReadXmls('C:/_temp/notas_mirene/52190505452064000490550010000065851000065850.xml')
-    nf = callReadXmls.process()
-    print(nf)
+# if __name__ == "__main__":
+#     callReadXmls = CallReadXmls('C:/_temp/notas_mirene/52190505452064000490550010000065851000065850.xml')
+#     nf = callReadXmls.process()
+#     print(nf)
