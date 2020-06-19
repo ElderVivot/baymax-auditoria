@@ -18,9 +18,16 @@ class NFSeGoiania(object):
         self._nfs = []
 
     def readNFe(self):
-        nfsXml = funcoesUteis.returnDataFieldInDict(self._dataXml, ['geral', 'GerarNfseResposta'])        
+        nfs = []
 
-        for nf in nfsXml:
+        nfsXml = funcoesUteis.returnDataFieldInDict(self._dataXml, ['geral', 'GerarNfseResposta'])
+
+        if type(nfsXml) is not list:
+            nfs.append(nfsXml)
+        else:
+            nfs = nfsXml
+
+        for nf in nfs:
             nfsConvertToXml = OrderedDict()
             
             nfsConvertToXml['GerarNfseResposta'] = nf
@@ -59,7 +66,7 @@ class NFSeGoiania(object):
 
 
 if __name__ == "__main__":
-    dataXml = readXml("C:/_temp/notas_gyn_teste/04605182000185.xml")
+    dataXml = readXml("C:/_temp/notas_gyn_teste/18040800000100.xml")#04605182000185 18040800000100
 
     # with open("C:/_temp/notas_gyn_teste/04605182000185.xml") as file:
     #     data = xmldict.parse(file.read())
