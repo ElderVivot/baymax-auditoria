@@ -38,7 +38,7 @@ class RearrangeWayToSaveXML(object):
         return None
     
     def process(self, pathXml):
-        callReadXmls = CallReadXmls(pathXml)
+        callReadXmls = CallReadXmls(pathXml, ['nfse_goiania'])
         nfs = callReadXmls.process()
 
         saveXML = SaveXML(self._wayToSave)
