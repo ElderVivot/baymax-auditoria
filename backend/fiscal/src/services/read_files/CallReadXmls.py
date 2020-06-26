@@ -14,8 +14,9 @@ from fiscal.src.services.read_files.NFSeGoiania import NFSeGoiania
 
 
 class CallReadXmls(object):
-    def __init__(self, xml):
+    def __init__(self, xml, filterTypeNFs=['nfe', 'nfse_goiania']):
         self._xml = xml
+        self._filterTypeNFs = filterTypeNFs
 
     def process(self):
         dataXml = readXml(self._xml)
@@ -26,15 +27,15 @@ class CallReadXmls(object):
 
         nf = None
 
-        if isNFe != "":
+        if isNFe != "" and self._filterTypeNFs.count('nfe') > 0:
             nfe = NFe(dataXml)
             nf = nfe.readNFe()
 
-        if isNFeCanceled != "":
+        if isNFeCanceled != "" and self._filterTypeNFs.count('nfe') > 0:
             nfeCanceled = NFeCanceled(dataXml)
             nf = nfeCanceled.readNFeCanceled()
 
-        if isNFSeGoiania != "":
+        if isNFSeGoiania != "" and self._filterTypeNFs.count('nfse_goiania') > 0:
             nfseGoiania = NFSeGoiania(dataXml)
             nf = nfseGoiania.readNFe()
 
