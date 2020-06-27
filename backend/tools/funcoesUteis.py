@@ -16,6 +16,38 @@ sys.path.append(os.path.dirname(__file__))
 
 import leArquivos
 
+def filterFolders(folders, filters):
+    foldersWithFilter = []
+    for folder in folders:
+        folderPath = folder.lower().replace('\\', '/')
+        countFilters = len(filters)
+        if countFilters > 0:
+            countFilterOK = 0
+            for filterFolder in filters:
+                if folderPath.count(filterFolder.lower()) > 0:
+                    countFilterOK += 1
+            if countFilterOK == countFilters:
+                foldersWithFilter.append(folder)
+        else:
+            foldersWithFilter.append(folder)
+
+    return foldersWithFilter
+
+def getAllFolders(folderMain, filters=[]):
+    folders = []
+
+    def readSubFolders(folderRead=folderMain):
+        [folders.append(f.path) for f in os.scandir(folderRead) if f.is_dir()]
+
+    # chama sub função de ler as pastas
+    readSubFolders()        
+    
+    # busca subpastas novamente
+    for folder in folders:
+        readSubFolders(folder)
+
+    return filterFolders(folders, filters)
+
 def removerAcentosECaracteresEspeciais(palavra):
     # Unicode normalize transforma um caracter em seu equivalente em latin.
     nfkd = unicodedata.normalize('NFKD', palavra).encode('ASCII', 'ignore').decode('ASCII')
