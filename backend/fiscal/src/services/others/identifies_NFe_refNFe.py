@@ -16,18 +16,19 @@ import tools.funcoesUteis as funcoesUteis
 
 class Identifies_NFe_refNFe(object):
     def __init__(self):
-        self._wayToRead = input('- Informe o caminho onde estão os XMLs que deseja ler: ').replace('\\', '/').replace('"', '')
-        self._wayToSave = input('- Agora informe o caminho onde deseja salvar o arquivo CSV: ').replace('\\', '/').replace('"', '')
-        self._filterDate = input('- A partir de qual data deseja organizar estes XMLs (dd/mm/aaaa): ')
-        # self._wayToRead = "C:\\notas_fiscais\\modelo_55".replace('\\', '/').replace('"', '')
-        # self._wayToSave = "C:\\notas_fiscais\\modelo_55".replace('\\', '/').replace('"', '')
-        # self._filterDate = "01/01/2020"
+        # self._wayToRead = input('- Informe o caminho onde estão os XMLs que deseja ler: ').replace('\\', '/').replace('"', '')
+        # self._wayToSave = input('- Agora informe o caminho onde deseja salvar o arquivo CSV: ').replace('\\', '/').replace('"', '')
+        # self._filterDate = input('- A partir de qual data deseja organizar estes XMLs (dd/mm/aaaa): ')
+        self._wayToRead = "C:\\notas_fiscais\\modelo_55".replace('\\', '/').replace('"', '')
+        self._wayToSave = "C:\\notas_fiscais\\modelo_55".replace('\\', '/').replace('"', '')
+        self._filterDate = "01/01/2020"
+        self._filtersFolder = '2020,Saidas,NF-e'.split(',')
         self._filterDate = funcoesUteis.retornaCampoComoData(self._filterDate)
         self._apiRest = ApiRest('extract_companies')
         self._companies = self._apiRest.get()
 
         self._outputfile = open(os.path.join(self._wayToSave, 'notas_refnfe.csv'), 'w', encoding='utf-8')
-        self._outputfile.write('Codigo Empresa;Numero Nota;Data Nota;Modelo;Serie;Valor;Valor ICMS;CNPJ Emitente;Nome Emitente;'
+        self._outputfile.write('Codigo Empresa;Numero Nota;Data Nota;Tipo Emissao;Modelo;Serie;Valor;Valor ICMS;CNPJ Emitente;Nome Emitente;'
             'CNPJ Destinatario;Nome Destinatario;Chave Atual;Chave Referencial\n')
 
     def returnDataEmp(self, cgce):
@@ -48,24 +49,27 @@ class Identifies_NFe_refNFe(object):
         if nfs is not None:
             for nf in nfs:
                 refNFe = nf['refNFe']
+                issueDateNF = nf['issueDateNF']
 
-                if refNFe != "":
+                if refNFe != "" and issueDateNF >= self._filterDate:
                     cnpjIssuer = nf['cnpjIssuer']
                     companie = self.returnDataEmp(cnpjIssuer)
 
                     if companie is not None:
-                        self._outputfile.write(f"{companie['codi_emp']};{nf['numberNF']};{nf['issueDateNF']};{nf['modelNF']};{nf['serieNF']};{nf['valueNF']};"
-                            f"{nf['valueICMS']};'{cnpjIssuer};{nf['nameIssuer']};'{nf['cnpjReceiver']};{nf['nameReceiver']};"
+                        self._outputfile.write(f"{companie['codi_emp']};{nf['numberNF']};{issueDateNF};{nf['typeNF']};{nf['modelNF']};{nf['serieNF']};"
+                            f"{nf['valueNF']};{nf['valueICMS']};'{cnpjIssuer};{nf['nameIssuer']};'{nf['cnpjReceiver']};{nf['nameReceiver']};"
                             f"'{nf['keyNF']};'{refNFe}\n")
 
     def processAll(self):
-        for root, dirs, files in os.walk(self._wayToRead):
-            countFiles = len(files)
-            for key, file in enumerate(files):
-                wayFile = os.path.join(root, file)
-                if file.lower().endswith(('.xml')):
-                    print(f'- Processando XML {wayFile} / {key+1} de {countFiles}')
-                    self.process(wayFile)
+        folders = funcoesUteis.getAllFolders(self._wayToRead, self._filtersFolder)
+        for folder in folders:
+            for root, _, files in os.walk(folder):
+                countFiles = len(files)
+                for key, file in enumerate(files):
+                    wayFile = os.path.join(root, file)
+                    if file.lower().endswith(('.xml')):
+                        print(f'- Processando XML {wayFile} / {key+1} de {countFiles}')
+                        self.process(wayFile)
 
         self._outputfile.close() # when fineshes process all, close the file
 
