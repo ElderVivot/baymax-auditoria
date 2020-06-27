@@ -16,12 +16,12 @@ import tools.funcoesUteis as funcoesUteis
 
 class Identifies_NFe_refNFe(object):
     def __init__(self):
-        # self._wayToRead = input('- Informe o caminho onde estão os XMLs que deseja ler: ').replace('\\', '/').replace('"', '')
-        # self._wayToSave = input('- Agora informe o caminho onde deseja salvar o arquivo CSV: ').replace('\\', '/').replace('"', '')
-        # self._filterDate = input('- A partir de qual data deseja organizar estes XMLs (dd/mm/aaaa): ')
-        self._wayToRead = "C:\\notas_fiscais\\modelo_55".replace('\\', '/').replace('"', '')
-        self._wayToSave = "C:\\notas_fiscais\\modelo_55".replace('\\', '/').replace('"', '')
-        self._filterDate = "01/01/2020"
+        self._wayToRead = input('- Informe o caminho onde estão os XMLs que deseja ler: ').replace('\\', '/').replace('"', '')
+        self._wayToSave = input('- Agora informe o caminho onde deseja salvar o arquivo CSV: ').replace('\\', '/').replace('"', '')
+        self._filterDate = input('- A partir de qual data deseja organizar estes XMLs (dd/mm/aaaa): ')
+        # self._wayToRead = "C:\\notas_fiscais\\modelo_55".replace('\\', '/').replace('"', '')
+        # self._wayToSave = "C:\\notas_fiscais\\modelo_55".replace('\\', '/').replace('"', '')
+        # self._filterDate = "01/01/2020"
         self._filterDate = funcoesUteis.retornaCampoComoData(self._filterDate)
         self._apiRest = ApiRest('extract_companies')
         self._companies = self._apiRest.get()
