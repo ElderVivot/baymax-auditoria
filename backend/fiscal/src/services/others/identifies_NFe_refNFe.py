@@ -38,7 +38,7 @@ class Identifies_NFe_refNFe(object):
         return None
     
     def process(self, pathXml):
-        callReadXmls = CallReadXmls(pathXml)
+        callReadXmls = CallReadXmls(pathXml, ['nfe'])
         nfs = callReadXmls.process()
 
         outputfile = open(os.path.join(self._wayToSave, 'notas_refnfe.csv'), 'w', encoding='utf-8')
