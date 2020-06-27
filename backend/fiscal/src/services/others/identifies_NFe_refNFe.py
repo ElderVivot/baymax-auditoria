@@ -26,6 +26,10 @@ class Identifies_NFe_refNFe(object):
         self._apiRest = ApiRest('extract_companies')
         self._companies = self._apiRest.get()
 
+        self._outputfile = open(os.path.join(self._wayToSave, 'notas_refnfe.csv'), 'w', encoding='utf-8')
+        self._outputfile.write('Codigo Empresa;Numero Nota;Data Nota;Modelo;Serie;Valor;Valor ICMS;CNPJ Emitente;Nome Emitente;'
+            'CNPJ Destinatario;Nome Destinatario;Chave Atual;Chave Referencial\n')
+
     def returnDataEmp(self, cgce):
         for companie in self._companies:
             cgceCompanie = funcoesUteis.treatTextField(companie["cgce_emp"])
@@ -39,11 +43,7 @@ class Identifies_NFe_refNFe(object):
     
     def process(self, pathXml):
         callReadXmls = CallReadXmls(pathXml, ['nfe'])
-        nfs = callReadXmls.process()
-
-        outputfile = open(os.path.join(self._wayToSave, 'notas_refnfe.csv'), 'w', encoding='utf-8')
-        outputfile.write('Codigo Empresa;Numero Nota;Data Nota;Modelo;Serie;Valor;Valor ICMS;CNPJ Emitente;Nome Emitente;'
-            'CNPJ Destinatario;Nome Destinatario;Chave Atual;Chave Referencial\n')
+        nfs = callReadXmls.process()        
 
         if nfs is not None:
             for nf in nfs:
@@ -54,11 +54,9 @@ class Identifies_NFe_refNFe(object):
                     companie = self.returnDataEmp(cnpjIssuer)
 
                     if companie is not None:
-                        outputfile.write(f"{companie['codi_emp']};{nf['numberNF']};{nf['issueDateNF']};{nf['modelNF']};{nf['serieNF']};{nf['valueNF']};"
+                        self._outputfile.write(f"{companie['codi_emp']};{nf['numberNF']};{nf['issueDateNF']};{nf['modelNF']};{nf['serieNF']};{nf['valueNF']};"
                             f"{nf['valueICMS']};'{cnpjIssuer};{nf['nameIssuer']};'{nf['cnpjReceiver']};{nf['nameReceiver']};"
                             f"'{nf['keyNF']};'{refNFe}\n")
-
-        outputfile.close()
 
     def processAll(self):
         for root, dirs, files in os.walk(self._wayToRead):
@@ -68,6 +66,8 @@ class Identifies_NFe_refNFe(object):
                 if file.lower().endswith(('.xml')):
                     print(f'- Processando XML {wayFile} / {key+1} de {countFiles}')
                     self.process(wayFile)
+
+        self._outputfile.close() # when fineshes process all, close the file
 
 if __name__ == "__main__":
     obj = Identifies_NFe_refNFe()
