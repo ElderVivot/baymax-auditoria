@@ -70,10 +70,10 @@ class NFe(object):
             cnpjReceiverCorrect = cnpjReceiver
             nameReceiverCorrect = nameReceiver
 
-        objNF['cnpjIssuerCorrect'] = cnpjIssuerCorrect
-        objNF['nameIssuerCorrect'] = nameIssuerCorrect
-        objNF['cnpjReceiverCorrect'] = cnpjReceiverCorrect
-        objNF['nameReceiverCorrect'] = nameReceiverCorrect
+        objNF['cnpjIssuer'] = cnpjIssuerCorrect
+        objNF['nameIssuer'] = nameIssuerCorrect
+        objNF['cnpjReceiver'] = cnpjReceiverCorrect
+        objNF['nameReceiver'] = nameReceiverCorrect
 
         # produtos = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'det'])
         # objNF['produtos'] = produtos
