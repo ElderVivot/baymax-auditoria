@@ -28,7 +28,7 @@ class NFe(object):
         issueDateNF = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'ide', 'dhEmi'])
         issueDateNF2 = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'ide', 'dEmi'])
         issueDateNF = issueDateNF2 if ( issueDateNF == "" or issueDateNF is None ) else issueDateNF
-        issueDateNF = funcoesUteis.transformDateFieldToString(funcoesUteis.retornaCampoComoData(issueDateNF, 2))
+        issueDateNF = funcoesUteis.retornaCampoComoData(issueDateNF, 2)
         objNF['issueDateNF'] = issueDateNF
 
         modelNF = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'ide', 'mod'])
@@ -45,11 +45,12 @@ class NFe(object):
 
         refNFe = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'ide', 'NFref', 'refNFe'])
         objNF['refNFe'] = refNFe
+        
+        typeNF = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'ide', 'tpNF'])
+        objNF['typeNF'] = typeNF
 
         nameIssuer = funcoesUteis.justLettersNumbersDots(funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'emit', 'xNome']))
         nameReceiver = funcoesUteis.justLettersNumbersDots(funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'dest', 'xNome']))
-
-        typeNF = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'ide', 'tpNF'])
         
         cnpjIssuer = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'emit', 'CNPJ'])
         cpfIssuer = funcoesUteis.returnDataFieldInDict(self._dataXml, ['nfeProc', 'NFe', 'infNFe', 'emit', 'CPF'])
