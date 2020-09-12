@@ -19,7 +19,7 @@ class RearrangeWayToSaveXML(object):
         self._wayToRead = input('- Informe o caminho onde estão os XMLs que deseja organizar: ').replace('\\', '/').replace('"', '')
         self._wayToSave = input('- Agora informe o caminho onde deseja salvar os XMLs organizados: ').replace('\\', '/').replace('"', '')
         self._filterDate = input('- A partir de qual data deseja organizar estes XMLs (dd/mm/aaaa): ')
-        # self._wayToRead = "C:\\notas_fiscais\\goiania\\2020-06-06_10-33-29_pm\\sucess\\73470384134".replace('\\', '/').replace('"', '')
+        # self._wayToRead = "C:\\notas_fiscais\\goiania\\teste".replace('\\', '/').replace('"', '')
         # self._wayToSave = "C:\\notas_fiscais".replace('\\', '/').replace('"', '')
         # self._filterDate = "01/01/2020"
         self._filterDate = funcoesUteis.retornaCampoComoData(self._filterDate)
