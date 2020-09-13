@@ -28,7 +28,9 @@ class ProcessNotes(object):
         try:
             df = pd.read_sql_query(sql, self._connection)
             notes = json.loads(df.to_json(orient='records', date_format='iso'))
+            countingNote = 1
             for note in notes:
+                print(f"\t- Processando nota {countingNote} de {len(notes)}")
                 noteDominioServico = self._getNoteDominio.get(
                     note['codeCompanie'], 'ser', note['numberNote'], note['cgceTomador'], note['dateNote'][0:10]
                 )
@@ -41,6 +43,8 @@ class ProcessNotes(object):
                 )
 
                 self._saveProcess.save('ser', note, noteDominioServico, companieTomador)
+                self._saveProcess.save('ent', note, noteDominioEntrada, companieTomador)
+                countingNote += 1
         except Exception as e:
             print('error --> ', os.path.abspath(__file__), ' method get --> ', e)
     
