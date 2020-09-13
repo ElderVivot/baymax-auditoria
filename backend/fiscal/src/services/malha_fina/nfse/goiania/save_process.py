@@ -39,6 +39,12 @@ class SaveProcess(object):
             return True
         return False
 
+    def makeAlertas(self, noteOriginal, noteDominio):
+        alertas = []
+        if noteDominio is None:
+            alertas.append(f"Nota fiscal {noteOriginal['numberNote']} não existe na Domínio.")
+        return alertas
+
     def makeConferenciaNota(self, typeNote, noteOriginal, noteDominio, companieTomador):
         destinatario = self.makeDestinatario(companieTomador)
 
@@ -63,7 +69,7 @@ class SaveProcess(object):
             "canc_dominio": self.checkIfNoteDominioIsCanceled(noteDominio),
             "propria": False,
             "valor": noteOriginal['amountNote'],
-            "alertas": [f"Nota fiscal {noteOriginal['numberNote']} não existe na Domínio."],
+            "alertas": self.makeAlertas(noteOriginal, noteDominio),
             "cfops": [],
             "desconhecimento": '',
             "chave": noteOriginal['keyNote']
