@@ -52,7 +52,7 @@ class SaveProcess(object):
             "periodo": noteOriginal['dateNote'][:7],
             "numero": noteOriginal['numberNote'],
             "serie": '',
-            "tipo": '',
+            "tipo": 2,
             "emitente": {
                 "codigo": noteOriginal['codeCompanie'],
                 "cnpj": noteOriginal['cgceCompanie']
@@ -65,6 +65,7 @@ class SaveProcess(object):
             "valor": noteOriginal['amountNote'],
             "alertas": [f"Nota fiscal {noteOriginal['numberNote']} não existe na Domínio."],
             "cfops": [],
+            "desconhecimento": '',
             "chave": noteOriginal['keyNote']
         }
 
