@@ -2,7 +2,7 @@ import psycopg2
 from typing import NewType
 
 user='postgres'
-password='0P9O8i7u*_*'
+password='postgres'
 host='localhost'
 database='iacon'
 
