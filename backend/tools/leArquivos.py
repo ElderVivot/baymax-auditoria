@@ -28,50 +28,6 @@ sys.path.append(fileDir)
 
 import funcoesUteis
 
-def buscaArquivosEmPasta(caminho, extensao, buscarSubpastas=True):
-    
-    pastas = []
-    lista_arquivos = []
-
-    if buscarSubpastas == True:
-        pastas = buscaSubpastas(caminho)
-    else:
-        pastas.append(caminho)
-
-    for pasta in pastas:
-        arquivos = os.listdir(pasta)
-        
-        for arquivo in arquivos:
-            arquivo = str(arquivo).upper()
-            if arquivo.endswith(extensao) and os.path.isdir(os.path.join(pasta,arquivo)) == False:
-                lista_arquivos.append(os.path.join(pasta,arquivo))
-
-    return lista_arquivos
-
-def buscaSubpastas(caminhoPrincipal):
-
-    subpastas = []
-
-    def lePastas(caminho=caminhoPrincipal):
-
-        pastas = os.listdir(caminho)
-        if os.path.isdir(caminho):
-            items = os.listdir(caminho)
-            for item in items:
-                novo_item = os.path.join(caminho,item)
-                if os.path.isdir(novo_item):
-                    subpastas.append(novo_item)
-                    continue
-
-    # chama sub função de ler as pastas
-    lePastas()        
-    
-    # busca subpastas novamente
-    for subpasta in subpastas:
-        lePastas(caminho=subpasta)
-
-    return subpastas
-
 def leXls_Xlsx(arquivo, nameSheetToFilter='filterAll'):
     lista_dados = []
     dados_linha = []
@@ -313,4 +269,5 @@ def readXml(way):
         with open(way) as file:
             return xmldict.parse(file.read())
     except Exception as e:
+        print(e)
         return {}

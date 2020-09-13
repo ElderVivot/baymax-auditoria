@@ -9,7 +9,7 @@ import datetime
 import json
 import codecs
 from pymongo import MongoClient
-from fiscal.src.read_files.CallReadXmls import CallReadXmls
+from fiscal.src.services.read_files.CallReadXmls import CallReadXmls
 from tools.leArquivos import readXml, readJson
 import tools.funcoesUteis as funcoesUteis
 # from zipfile import ZipFile

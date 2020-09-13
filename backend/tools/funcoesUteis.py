@@ -16,14 +16,46 @@ sys.path.append(os.path.dirname(__file__))
 
 import leArquivos
 
+def filterFolders(folders, filters):
+    foldersWithFilter = []
+    for folder in folders:
+        folderPath = folder.lower().replace('\\', '/')
+        countFilters = len(filters)
+        if countFilters > 0:
+            countFilterOK = 0
+            for filterFolder in filters:
+                if folderPath.count(filterFolder.lower()) > 0:
+                    countFilterOK += 1
+            if countFilterOK == countFilters:
+                foldersWithFilter.append(folder)
+        else:
+            foldersWithFilter.append(folder)
+
+    return foldersWithFilter
+
+def getAllFolders(folderMain, filters=[]):
+    folders = []
+
+    def readSubFolders(folderRead=folderMain):
+        [folders.append(f.path) for f in os.scandir(folderRead) if f.is_dir()]
+
+    # chama sub função de ler as pastas
+    readSubFolders()        
+    
+    # busca subpastas novamente
+    for folder in folders:
+        readSubFolders(folder)
+
+    return filterFolders(folders, filters)
+
 def removerAcentosECaracteresEspeciais(palavra):
     # Unicode normalize transforma um caracter em seu equivalente em latin.
     nfkd = unicodedata.normalize('NFKD', palavra).encode('ASCII', 'ignore').decode('ASCII')
     palavraTratada = u"".join([c for c in nfkd if not unicodedata.combining(c)])
 
     # Usa expressão regular para retornar a palavra apenas com valores corretos
-    return re.sub('[^a-zA-Z0-9.!+:>=)?$(/*,\-_ \\\]', '', palavraTratada)
-
+    return re.sub('[^a-zA-Z0-9.!+:><=)?$(/*,"\'\-_ \\\]', '', palavraTratada)
+    
 def trocaCaracteresTextoPraLetraX(palavra):
     # Unicode normalize transforma um caracter em seu equivalente em latin.
     nfkd = unicodedata.normalize('NFKD', palavra).encode('ASCII', 'ignore').decode('ASCII')
@@ -86,6 +118,14 @@ def returnDataFieldInDict(data, valuesList, valueDefault=''):
             return data[valuesList[0]][valuesList[1]][valuesList[2]][valuesList[3]][valuesList[4]]
         elif lenList == 6:
             return data[valuesList[0]][valuesList[1]][valuesList[2]][valuesList[3]][valuesList[4]][valuesList[5]]
+        elif lenList == 7:
+            return data[valuesList[0]][valuesList[1]][valuesList[2]][valuesList[3]][valuesList[4]][valuesList[5]][valuesList[6]]
+        elif lenList == 8:
+            return data[valuesList[0]][valuesList[1]][valuesList[2]][valuesList[3]][valuesList[4]][valuesList[5]][valuesList[6]][valuesList[7]]
+        elif lenList == 9:
+            return data[valuesList[0]][valuesList[1]][valuesList[2]][valuesList[3]][valuesList[4]][valuesList[5]][valuesList[6]][valuesList[7]][valuesList[8]]
+        elif lenList == 10:
+            return data[valuesList[0]][valuesList[1]][valuesList[2]][valuesList[3]][valuesList[4]][valuesList[5]][valuesList[6]][valuesList[7]][valuesList[8]][valuesList[9]]
         else:
             return ""
     except Exception:
