@@ -7,4 +7,3 @@ SELECT ent.codi_emp, ent.codi_ent, ent.nume_ent, ent.vcon_ent, ent.ddoc_ent, ent
  WHERE ent.codi_emp = #
    AND ent.nume_ent = #
    AND forn.cgce_for = '#'
-   AND ent.ddoc_ent = '#'
