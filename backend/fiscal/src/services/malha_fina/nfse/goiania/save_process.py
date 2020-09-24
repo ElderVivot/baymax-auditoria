@@ -58,7 +58,8 @@ class SaveProcess(object):
             "periodo": noteOriginal['dateNote'][:7],
             "numero": noteOriginal['numberNote'],
             "serie": '',
-            "tipo": 0 if typeNote == 'ent' else 2,
+            "tipo": 0 if typeNote == 'ent' else 1,
+            "modelo": 'NFS-e',
             "emitente": {
                 "codigo": noteOriginal['codeCompanie'],
                 "cnpj": noteOriginal['cgceCompanie']
