@@ -32,14 +32,14 @@ class ProcessNotes(object):
             for note in notes:
                 print(f"\t- Processando nota {countingNote} de {len(notes)}")
                 noteDominioServico = self._getNoteDominio.get(
-                    note['codeCompanie'], 'ser', note['numberNote'], note['cgceTomador'], note['dateNote'][0:10]
+                    note['codeCompanie'], 'ser', note['numberNote'], note['cgceTomador']
                 )
 
                 companieTomador = self._getCompanies.get(cgce=note['cgceTomador'])
                 companieTomador = companieTomador[0] if companieTomador is not None else None
                 codeCompanieTomador = companieTomador['code'] if companieTomador is not None else None
                 noteDominioEntrada = self._getNoteDominio.get(
-                    codeCompanieTomador, 'ent', note['numberNote'], note['cgceCompanie'], note['dateNote'][0:10]
+                    codeCompanieTomador, 'ent', note['numberNote'], note['cgceCompanie']
                 )
 
                 self._saveProcess.save('ser', note, noteDominioServico, companieTomador)
