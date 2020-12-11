@@ -16,11 +16,12 @@ class GetNoteDominio(object):
         self._connection = self._connectionODBC.getConnection()
         self._data = None
 
-    def get(self, codeCompanie, typeNote: str, numberNote: int, cgce: str, dateNote: str) -> Dict:
+    def get(self, codeCompanie, typeNote: str, numberNote: int, cgce: str) -> Dict:
         if typeNote == 'ser' and codeCompanie is not None:
-            sql = readSql(absPath, 'get_note_dominio_servico.sql', codeCompanie, numberNote, cgce, dateNote)
+            sql = readSql(absPath, 'get_note_dominio_servico.sql', codeCompanie, numberNote, cgce)
         elif typeNote == 'ent' and codeCompanie is not None:
-            sql = readSql(absPath, 'get_note_dominio_entrada.sql', codeCompanie, numberNote, cgce, dateNote)
+            # don't has dateNote because in REST the date is date pagamento, and don't date emissao
+            sql = readSql(absPath, 'get_note_dominio_entrada.sql', codeCompanie, numberNote, cgce)
         else:
             return
 

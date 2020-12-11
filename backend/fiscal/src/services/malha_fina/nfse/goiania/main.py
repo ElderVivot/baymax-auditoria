@@ -14,6 +14,7 @@ class MainMalhaFinaGoiania(object):
         self._getCompanies.closeConnection()
         
         for companie in companies:
+            print(f"- Processando empresa {companie['code']} - {companie['name']}")
             self._processNotes.get(companie['code'])
 
         self._processNotes.closeConnection()
