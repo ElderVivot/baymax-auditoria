@@ -1,5 +1,7 @@
 from get_companies import GetCompanies
 from process_notes import ProcessNotes
+import sys
+import calendar
 
 class MainMalhaFinaGoiania(object):
     def __init__(self, dateStart: str, dateEnd: str, codeCompanie: str = '%'):
@@ -20,5 +22,16 @@ class MainMalhaFinaGoiania(object):
         self._processNotes.closeConnection()
 
 if __name__ == "__main__":
-    mainMalhaFinaGoiania = MainMalhaFinaGoiania('2020-01-01', '2020-12-01')
+    codeCompanie = str(sys.argv[1])
+    monthInicial = int(sys.argv[2])
+    yearInicial = int(sys.argv[3])
+    monthFinal = int(sys.argv[4])
+    yearFinal = int(sys.argv[5])
+
+    dayFinal = calendar.monthrange(yearFinal, monthFinal)[1]
+
+    dateInicial = f'{yearInicial}-{monthInicial:0>2}-01'
+    dateFinal = f'{yearFinal}-{monthFinal:0>2}-{dayFinal:0>2}'
+
+    mainMalhaFinaGoiania = MainMalhaFinaGoiania(dateInicial, dateFinal, codeCompanie)
     mainMalhaFinaGoiania.process()
