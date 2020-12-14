@@ -7,4 +7,3 @@ SELECT ser.codi_emp, ser.codi_ser, ser.nume_ser, ser.vcon_ser, ser.ddoc_ser, ser
  WHERE ser.codi_emp = #
    AND ser.nume_ser = #
    AND cli.cgce_cli = '#'
-   AND ser.ddoc_ser = '#'
