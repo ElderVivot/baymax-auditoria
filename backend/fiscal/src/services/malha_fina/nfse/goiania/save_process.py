@@ -73,7 +73,7 @@ class SaveProcess(object):
             "alertas": self.makeAlertas(noteOriginal, noteDominio),
             "cfops": [],
             "desconhecimento": '',
-            "chave": noteOriginal['keyNote']
+            "chave": f"Nota {noteOriginal['numberNote']} - Tomador {companieTomador['cgce']} - Prestador {noteOriginal['cgceCompanie']}"
         }
 
     def save(self, typeNote, noteOriginal, noteDominio, companieTomador):
