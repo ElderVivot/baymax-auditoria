@@ -42,7 +42,7 @@ class SaveProcess(object):
     def makeAlertas(self, noteOriginal, noteDominio):
         alertas = []
         if noteDominio is None:
-            alertas.append(f"Nota fiscal {noteOriginal['numberNote']} não existe na Domínio.")
+            alertas.append(f"Nota fiscal {noteOriginal['numberNote']} referente ao prestador {noteOriginal['cgceCompanie']} não existe na Domínio.")
         return alertas
 
     def makeConferenciaNota(self, typeNote, noteOriginal, noteDominio, companieTomador):
@@ -73,7 +73,7 @@ class SaveProcess(object):
             "alertas": self.makeAlertas(noteOriginal, noteDominio),
             "cfops": [],
             "desconhecimento": '',
-            "chave": f"Nota {noteOriginal['numberNote']} - Tomador {companieTomador['cgce']} - Prestador {noteOriginal['cgceCompanie']}"
+            "chave": noteOriginal['keyNote']
         }
 
     def save(self, typeNote, noteOriginal, noteDominio, companieTomador):
