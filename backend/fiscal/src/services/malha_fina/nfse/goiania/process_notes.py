@@ -26,8 +26,8 @@ class ProcessNotes(object):
 
     def get(self, dateInicialAsClient: str, dateFinalAsClient: str, codeCompanie: str = '%') -> List:
         sql = readSql(absPath, 'process_notes.sql', codeCompanie, self._dateStart, self._dateEnd)
-        dateInicialAsClientDate = retornaCampoComoData(dateFinalAsClient)
-        dateFinalAsClientDate = retornaCampoComoData(dateFinalAsClient)
+        dateInicialAsClientDate = retornaCampoComoData(dateInicialAsClient, 2)
+        dateFinalAsClientDate = retornaCampoComoData(dateFinalAsClient, 2)
         try:
             df = pd.read_sql_query(sql, self._connection)
             notes = json.loads(df.to_json(orient='records', date_format='iso'))
@@ -38,7 +38,7 @@ class ProcessNotes(object):
                     note['codeCompanie'], 'ser', note['numberNote'], note['cgceTomador']
                 )
 
-                dateNote = retornaCampoComoData(note['dateNote'])
+                dateNote = retornaCampoComoData(note['dateNote'], 2)
 
                 # ignora notas fora do periodo da empresa
                 if dateNote < dateInicialAsClientDate or dateNote > dateFinalAsClientDate:
