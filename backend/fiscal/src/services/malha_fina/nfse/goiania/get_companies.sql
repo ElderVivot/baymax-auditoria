@@ -1,4 +1,4 @@
-SELECT c.code, c."name", c.cgce, COALESCE(c."dateInicialAsClient", DATE('2020-01-01')), COALESCE(DATE(c."dateFinalAsClient") + 1, DATE('2100-01-01')) AS  dateFinalAsClient
+SELECT c.code, c."name", c.cgce, COALESCE(c."dateInicialAsClient", DATE('2020-01-01')) AS dateInicialAsClient, COALESCE(DATE(c."dateFinalAsClient") + 1, DATE('2100-01-01')) AS  dateFinalAsClient
   FROM companies_goiania cg 
        INNER JOIN companies c 
             ON    c.code = cg.code 
