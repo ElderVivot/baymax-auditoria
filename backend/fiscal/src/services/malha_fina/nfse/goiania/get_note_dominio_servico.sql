@@ -6,4 +6,4 @@ SELECT ser.codi_emp, ser.codi_ser, ser.nume_ser, ser.vcon_ser, ser.ddoc_ser, ser
               AND cli.codi_cli = ser.codi_cli
  WHERE ser.codi_emp = #
    AND ser.nume_ser = #
-   AND cli.cgce_cli = '#'
+   AND cli.cgce_cli LIKE '%' + SUBSTR('#', 1, len(cli.cgce_cli)) + '%'
