@@ -6,4 +6,4 @@ SELECT ent.codi_emp, ent.codi_ent, ent.nume_ent, ent.vcon_ent, ent.ddoc_ent, ent
               AND forn.codi_for = ent.codi_for
  WHERE ent.codi_emp = #
    AND ent.nume_ent = #
-   AND forn.cgce_for = '#'
+   AND forn.cgce_for LIKE '%' + SUBSTR('#', 1, len(forn.cgce_for)) + '%'
