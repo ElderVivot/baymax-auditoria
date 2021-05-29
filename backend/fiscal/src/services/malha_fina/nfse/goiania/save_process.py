@@ -1,6 +1,9 @@
 import os
 import sys
 from datetime import datetime
+from pymongo.database import Database
+from pymongo.collection import Collection
+from pymongo import ASCENDING
 
 absPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(absPath[:absPath.find('fiscal')])
@@ -10,8 +13,16 @@ from dao.src.ConnectionMongo import ConnectionMongo
 class SaveProcess(object):
     def __init__(self):
         self._connectionMongo = ConnectionMongo()
-        self._connection = self._connectionMongo.getConnection()
-        self._collection = self._connection['conferencia_notas_periodos']
+        self._connection: Database = self._connectionMongo.getConnection()
+        self._collection: Collection = self._connection['conferencia_notas_periodos']
+        self._createIndex()
+
+    def _createIndex(self):
+        indexes = list(self._collection.index_information())
+        if len(indexes) <= 1:
+            self._collection.create_index(
+                [("empresa", ASCENDING), ("numero", ASCENDING), ("chave", ASCENDING)]
+            )
 
     def makeDestinatario(self, companieTomador):
         if companieTomador is not None:
